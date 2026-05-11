@@ -1,6 +1,6 @@
 ---
 name: ai-level-check
-description: 不答题。直接读取 ~/.claude/ 下的真实 artifacts（Skills/CLAUDE.md/MCP/agents/memory/projects），自动推断 AI 使用 10 级框架的 4 维度评分，输出可提交的标准报告。交易产品中心 2026-05 摸底专用。
+description: 不答题。直接读取 ~/.claude/ 下的真实 artifacts（Skills/CLAUDE.md/MCP/agents/memory/projects），自动推断 AI 使用 10 级框架的 4 维度评分，输出可提交的标准报告。
 ---
 
 # AI 能力自检（10 级框架）· 自动版
