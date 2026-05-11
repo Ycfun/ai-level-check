@@ -42,49 +42,53 @@ ls ~/vault 2>/dev/null && find ~/vault -maxdepth 3 -name "*.md" 2>/dev/null | wc
 gh repo list --visibility public --limit 5 2>/dev/null
 ```
 
-## 第 2 步：4 维度评分（0-10，基线 6）
+## 第 2 步：4 维度评分（0-10，基线 6，严格版）
+
+> **打分原则**：宁可低估，不要高估。门槛已上调，原 OR 多改 AND；下属都给 8+ 部门就摸不到底。
 
 ### 可控性 — 你能让 AI 多听话
 - **基线 6**（能跑这个 skill）
-- +1：自定义 Skills ≥ 3
-- +1：自定义 Skills ≥ 8 **或** 全局 CLAUDE.md ≥ 50 行
-- +1：MCP 服务器 ≥ 1 **或** hooks 已配置
-- +1：feedback 记忆 ≥ 3（说明在持续调教 AI）
+- +1：自定义 Skills ≥ 5
+- +1：自定义 Skills ≥ 10 **且** 全局 CLAUDE.md ≥ 50 行
+- +1：MCP 服务器 ≥ 1 **且** hooks 已配置
+- +1：feedback 记忆 ≥ 5（持续调教 AI）
 - 封顶 10
-- 降级触发：没有全局 CLAUDE.md 且 skills < 3 → 直接降到 5（基础没打牢）
+- 降级触发：没有全局 CLAUDE.md 且 skills < 3 → 直接降到 5
 
 ### 广度 — 覆盖多少场景
 - **基线 6**
-- +1：项目目录数 ≥ 5
-- +1：项目目录数 ≥ 10
-- +1：最近 7 天活跃项目 ≥ 3
-- +1：memory 里有 personal/non-work 痕迹（看 project_*.md 是否有非工作类型如游戏/个人站等）
+- +1：项目目录数 ≥ 8
+- +1：项目目录数 ≥ 15
+- +1：最近 7 天活跃项目 ≥ 5
+- +1：memory 里有 ≥ 2 类非工作场景（如游戏/个人站/家庭/学习），不只单一兴趣
 - 封顶 10
 - 降级触发：项目目录 ≤ 1 → 降到 4
 
 ### 形态 — 协作复杂度
 - **基线 6**（单 Agent 工具链熟练）
-- +1：subagents ≥ 1 **或** custom commands ≥ 1
-- +1：scheduled_tasks 非空 **或** hooks 已配置
-- +1：subagents ≥ 2 **且** scheduled_tasks ≥ 1（多 Agent + 自动化）
-- +1：发现完整自反馈机制（memory 体系 + feedback 文件 ≥ 5）
+- +1：subagents ≥ 2 **或** custom commands ≥ 2
+- +1：scheduled_tasks ≥ 1 **且** hooks 已配置
+- +1：subagents ≥ 3 **且** scheduled_tasks ≥ 2（多 Agent + 自动化矩阵）
+- +1：完整自反馈机制（memory 文件 ≥ 15 **且** feedback 文件 ≥ 8）
 - 封顶 10
 - 降级触发：仅 1 个项目 + 没有任何 agents/commands/scheduled → 降到 5
 
 ### 角色 — AI 在你认知中是什么（artifacts 推断版）
 - **基线 6**（伙伴/同事）
-- +1：MEMORY.md 体系完整（user-profile + feedback + project + reference 多类齐全）
-- +1：有面向他人/教学型 Skills（README 型、含使用说明）
-- +1：检测到 GitHub public 仓库分享方法论 **或** vault 里有 ≥ 20 个 .md 沉淀
-- +1：memory 里有"影响他人"痕迹（project_*.md 提到分享/教学/团队推广）
-- 封顶 10
-- **重要**：角色维度从 artifacts 推断有局限（推不到工作外用法、线下影响力），结尾必须提醒用户在备注字段补充。
+- +1：MEMORY.md 体系完整（user-profile + feedback + project + reference **四类齐全**）
+- +1：教学型 Skills ≥ 2（README 型、含使用说明、面向他人）
+- +1：GitHub public 仓 ≥ 2 分享方法论 **或** vault 里有 ≥ 50 个 .md 沉淀
+- +1：memory 里有**已落地的**"影响他人"痕迹（具体团队/组织名 + 推广证据，非空泛提及）
+- **封顶 9**（artifacts 推不到线下影响力 / 工作外用法，留 1 分给人工 review）
+- **重要**：角色维度从 artifacts 推断有局限，结尾必须提醒用户在备注字段补充。
 
-## 第 3 步：等级换算
+## 第 3 步：等级换算（严格版）
 
-平均分 → 等级：
+**核心规则**：综合等级 = min(平均分向下取整, 最低维度分)
 
-| 平均 | 等级 |
+即**短板硬卡位**：哪怕平均到 9，最低维 7 也只给 Lv.7。短板比平均更说明真实水位。
+
+| 平均 | 候选等级 |
 |---|---|
 | 6 | Lv.6 召唤师 |
 | 7 | Lv.7 铸造师 |
@@ -92,7 +96,10 @@ gh repo list --visibility public --limit 5 2>/dev/null
 | 9 | Lv.9 觉醒者 |
 | 10 | Lv.10 一人军团 |
 
-**关键校准**：最低维 ≤ 4 → 整体降一级（短板比平均更说明问题）。
+**关键校准**：
+- 最低维 ≤ 4 → 整体再降一级（双重严苛）
+- 想到 Lv.8 必须 4 维都 ≥ 8；想到 Lv.9 必须 4 维都 ≥ 9
+- 报告里必须显示「平均分 / 最低维 / 综合等级」三个数，让用户看清是被哪个维度卡住
 
 ## 第 4 步：输出报告（按下面模板填）
 
